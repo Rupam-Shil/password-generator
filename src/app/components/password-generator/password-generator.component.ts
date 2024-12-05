@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 import { PasswordService } from '../../services/password.service';
 
 @Component({
@@ -16,9 +17,11 @@ export class PasswordGeneratorComponent {
 	includeNumbers: boolean = false;
 	includeSpecial: boolean = false;
 	generatedPassword: string = '';
-	copied: boolean = false;
 
-	constructor(private passwordService: PasswordService) {}
+	constructor(
+		private passwordService: PasswordService,
+		private toastr: ToastrService
+	) {}
 
 	generatePassword() {
 		this.generatedPassword = this.passwordService.generatePassword(
@@ -30,11 +33,12 @@ export class PasswordGeneratorComponent {
 	}
 
 	copyToClipboard() {
-		navigator.clipboard.writeText(this.generatedPassword);
-		this.copied = true;
-
-		setTimeout(() => {
-			this.copied = false;
-		}, 2000);
+		if (!this.generatedPassword) return;
+		
+		navigator.clipboard.writeText(this.generatedPassword).then(() => {
+			this.toastr.success('Password copied to clipboard!', 'Success');
+		}).catch(() => {
+			this.toastr.error('Failed to copy password', 'Error');
+		});
 	}
 }

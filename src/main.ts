@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
+import { Component } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideToastr } from 'ngx-toastr';
 import { PasswordGeneratorComponent } from './app/components/password-generator/password-generator.component';
 
 @Component({
@@ -24,4 +26,13 @@ import { PasswordGeneratorComponent } from './app/components/password-generator/
 })
 export class App {}
 
-bootstrapApplication(App);
+bootstrapApplication(App, {
+	providers: [
+		provideAnimations(),
+		provideToastr({
+			timeOut: 3000,
+			positionClass: 'toast-top-right',
+			preventDuplicates: true,
+		}),
+	],
+});
